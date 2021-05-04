@@ -7,7 +7,7 @@ import {
   faUser,
 } from "@fortawesome/fontawesome-free-solid";
 
-import { registerAccount } from "../../../services/auth.services";
+import { registerAccount } from "../../../../services/auth.services";
 
 const FormRegister = () => {
   const [form, setForm] = useState({});
@@ -17,6 +17,7 @@ const FormRegister = () => {
     const { name, value } = target;
 
     setForm({ ...form, [name]: value });
+    console.log(form);
   };
 
   const handleSubmit = async (evt) => {
