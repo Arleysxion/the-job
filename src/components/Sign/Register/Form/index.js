@@ -1,109 +1,141 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEnvelope,
+  faLock,
+  faUser,
+} from "@fortawesome/fontawesome-free-solid";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faLock, faUser } from '@fortawesome/fontawesome-free-solid';
+import { registerAccount } from "../../../services/auth.services";
 
-class FormRegister extends Component {
-  constructor() {
-    super();
+const FormRegister = () => {
+  const [form, setForm] = useState({});
+  const history = useHistory();
 
-    this.state = {};
+  const handleInput = ({ target }) => {
+    const { name, value } = target;
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+    setForm({ ...form, [name]: value });
+  };
 
-  handleChange(evt) {
-    this.setState({
-      [evt.target.id]: evt.target.value,
-    });
-  }
-
-  handleSubmit(evt) {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
-    this.props.handleSave(this.state);
-  }
 
-  validateForm() {
-    const { name, email, password } = this.state;
+    const newUser = {
+      ...form,
+      role: "candidate",
+    };
 
-    return (email && email.length > 0) &&
-      (password && password.length > 0) &&
-      (name && name.length > 0);
-  }
+    try {
+      const userRegistered = await registerAccount(newUser);
 
-  render() {
+      delete userRegistered.password;
+
+      // KEY localstorage : MyApp
+      localStorage.setItem("THE_JOB_APP", JSON.stringify(userRegistered));
+      // Redirect to home
+      history.push("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const validateForm = () => {
+    const { name, email, password } = form;
+
     return (
-      <form onSubmit={this.handleSubmit}>
-        <div className="form-group">
-          <div className="input-group">
-            <span className="input-group-addon">
-              <FontAwesomeIcon icon={faUser} size="1x" />
-            </span>
-            <input
-              id="name"
-              type="text"
-              className="form-control"
-              placeholder="Your name"
-              required
-              onChange={this.handleChange}
-            />
-          </div>
-        </div>
-
-        <hr className="hr-xs" />
-
-        <div className="form-group">
-          <div className="input-group">
-            <span className="input-group-addon">
-              <FontAwesomeIcon icon={faEnvelope} size="1x" />
-            </span>
-            <input
-              id="email"
-              type="email"
-              className="form-control"
-              placeholder="Email"
-              required
-              onChange={this.handleChange}
-            />
-          </div>
-        </div>
-
-        <hr className="hr-xs" />
-
-        <div className="form-group">
-          <div className="input-group">
-            <span className="input-group-addon">
-              <FontAwesomeIcon icon={faLock} size="1x" />
-            </span>
-            <input
-              id="password"
-              type="password"
-              className="form-control"
-              placeholder="Password"
-              required
-              onChange={this.handleChange}
-            />
-          </div>
-        </div>
-
-        <button
-          className="btn btn-primary btn-block"
-          type="submit"
-          disabled={!this.validateForm()}
-        >
-          Login
-        </button>
-
-      </form>
+      email &&
+      email.length > 0 &&
+      password &&
+      password.length >= 4 &&
+      name &&
+      name.length > 0
     );
-  }
-}
+  };
 
+  useEffect(() => {
+    const localUser = localStorage.getItem("THE_JOB_APP");
+    let timer;
 
-FormRegister.propTypes = {
-  handleSave: PropTypes.func.isRequired,
+    if (localUser) {
+      timer = setTimeout(() => {
+        history.push("/");
+      }, 2000);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="form-group">
+        <div className="input-group">
+          <span className="input-group-addon">
+            <FontAwesomeIcon icon={faUser} size="1x" />
+          </span>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            className="form-control"
+            placeholder="Your name"
+            onChange={handleInput}
+            required
+          />
+        </div>
+      </div>
+
+      <hr className="hr-xs" />
+
+      <div className="form-group">
+        <div className="input-group">
+          <span className="input-group-addon">
+            <FontAwesomeIcon icon={faEnvelope} size="1x" />
+          </span>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            className="form-control"
+            placeholder="Email"
+            onChange={handleInput}
+            required
+          />
+        </div>
+      </div>
+
+      <hr className="hr-xs" />
+
+      <div className="form-group">
+        <div className="input-group">
+          <span className="input-group-addon">
+            <FontAwesomeIcon icon={faLock} size="1x" />
+          </span>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            className="form-control"
+            placeholder="Password"
+            minLength={4}
+            onChange={handleInput}
+            required
+          />
+        </div>
+      </div>
+
+      <button
+        className="btn btn-primary btn-block"
+        type="submit"
+        disabled={!validateForm()}
+      >
+        Registered
+      </button>
+    </form>
+  );
 };
 
 export default FormRegister;
