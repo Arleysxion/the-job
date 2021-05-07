@@ -37,7 +37,6 @@
       "image": "/img/avatar-4.jpg"
     }
   ],
-
   "jobs": [
     {
       "id": "1020",
@@ -220,11 +219,17 @@
       "className": "label-success"
     }
   ],
-
   "users": [
     {
       "id": "001",
       "userName": "Arley"
+    },
+    {
+      "name": "arley",
+      "email": "arleysxion@gmail.com",
+      "password": "1234",
+      "role": "candidate",
+      "id": "FcBMJIh"
     }
   ]
 }

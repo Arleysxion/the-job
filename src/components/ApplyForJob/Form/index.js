@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Form = () => (
   <main>
@@ -13,11 +13,19 @@ const Form = () => (
         <form>
           <div className="row">
             <div className="form-group col-xs-12 col-md-6">
-              <input type="text" className="form-control input-lg" placeholder="Name" />
+              <input
+                type="text"
+                className="form-control input-lg"
+                placeholder="Name"
+              />
             </div>
 
             <div className="form-group col-xs-12 col-md-6">
-              <input type="email" className="form-control input-lg" placeholder="Email" />
+              <input
+                type="email"
+                className="form-control input-lg"
+                placeholder="Email"
+              />
             </div>
           </div>
 
@@ -30,7 +38,9 @@ const Form = () => (
           <div className="row">
             <div className="col-xs-6 col-md-3">
               <div className="upload-button upload-button-block">
-                <button className="btn btn-block btn-success">Attach your CV</button>
+                <button className="btn btn-block btn-success">
+                  Attach your CV
+                </button>
                 <input name="cv" type="file" />
               </div>
             </div>
@@ -42,7 +52,6 @@ const Form = () => (
             </div>
           </div>
         </form>
-
       </div>
     </section>
   </main>
